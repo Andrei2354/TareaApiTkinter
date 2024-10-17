@@ -1,4 +1,7 @@
-from ProductApi import *
+from typing import List
+
+from models.ProductApi import Product
+from dataclasses import dataclass
 
 @dataclass
 class APIResponse:

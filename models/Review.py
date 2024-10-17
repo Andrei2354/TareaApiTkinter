@@ -1,5 +1,4 @@
-from ProductApi import *
-
+from dataclasses import dataclass
 @dataclass
 class Reviews:
     rating: int
