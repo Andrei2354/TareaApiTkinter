@@ -10,8 +10,6 @@ data1 = response.json()
 product_list = fromdict(APIResponse, data1)
 
 
-for product in product_list.products:
-    print(product.title)
 
 # data_String = json.dumps(data1)
 # my_obj = json.loads(data_String, object_hook=lambda data: Product(**data))
