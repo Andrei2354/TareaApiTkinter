@@ -8,6 +8,9 @@ from PIL import ImageTk, Image
 import requests
 from models.Main import product_list
 
+root = tk.Tk()  # Ventana principal
+canvas = tk.Canvas(root)
+root.geometry("800x800")
 
 label_imagen_producto = ""
 indice = 0
@@ -16,9 +19,15 @@ descuento = tk.StringVar()
 marca = tk.StringVar()
 unidades = tk.StringVar()
 valoracion = tk.StringVar()
+precio = tk.StringVar()
+descripcion = tk.StringVar()
+titulo = tk.StringVar()
+etiquetas = tk.StringVar()
+resultado = tk.StringVar()
+titulo1 = tk.StringVar()
 
 def carrusel():
-    global indice, contenido, label_imagen_producto, titulo, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion
+    global root, indice, contenido, label_imagen_producto, titulo1, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion
     if indice < len(product_list.products):
         bits_imagen = requests.get(product_list.products[indice].thumbnail, stream=True)
         imagen = Image.open(bits_imagen.raw)
@@ -26,7 +35,7 @@ def carrusel():
         label_imagen_producto.config(image=imagen_tk)
         label_imagen_producto.image = imagen_tk
 
-        titulo.set(product_list.products[indice].title)
+        titulo1.set(product_list.products[indice].title)
         descripcion.set(product_list.products[indice].description)
         categoria.set(product_list.products[indice].category)
         precio.set(product_list.products[indice].price)
@@ -38,10 +47,7 @@ def carrusel():
 
 
 def modelo_principal():
-    global indice, contenido, label_imagen_producto, titulo, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion
-    root = tk.Tk()  # Ventana principal
-    canvas = tk.Canvas(root)
-    root.geometry("800x800")
+    global root, indice, contenido, label_imagen_producto, titulo1, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion
 
     style = ttk.Style()
     style.configure("1.TLabel", background="#fc9403")
@@ -60,31 +66,23 @@ def modelo_principal():
     contenido = ttk.Frame(root, style="3.TLabel", width=800, height=750)
     contenido.pack(side="top", expand=True, fill=BOTH)
 
-    resultado = tk.StringVar()
-    indice = 1
-
-
     boton_resultado = ttk.Button(contenido, textvariable=resultado)
     boton_resultado.pack(side="bottom", fill=NONE)
 
     label_imagen_producto = ttk.Label(contenido,background="#dff5f0", text="Jugar")
     label_imagen_producto.pack(side="bottom", ipady="2", ipadx="20")
 
-    titulo = tk.StringVar()
-    label_titulo = Label(contenido, textvariable=titulo , background="#dff5f0")
+    label_titulo = Label(contenido, textvariable=titulo1 , background="#dff5f0")
     label_titulo.pack(ipady="12", ipadx="20")
 
-    descripcion = tk.StringVar()
     label_descripcion = Label(contenido, textvariable=descripcion , background="#dff5f0")
     label_descripcion.pack(ipady="12", ipadx="20")
 
     label_categoria = Label(contenido, textvariable=categoria , background="#dff5f0")
     label_categoria.pack(ipady="12", ipadx="20")
 
-    precio = tk.StringVar()
     label_precio = Label(contenido, textvariable=precio , background="#dff5f0")
     label_precio.pack(ipady="12", ipadx="20")
-
 
     label_descuento = Label(contenido, textvariable=descuento , background="#dff5f0")
     label_descuento.pack(ipady="12", ipadx="20")
