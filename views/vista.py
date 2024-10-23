@@ -1,4 +1,5 @@
 import tkinter as tk
+from functools import wraps
 from itertools import product
 from shutil import which
 from tkinter import ttk
@@ -36,14 +37,32 @@ def carrusel():
         label_imagen_producto.image = imagen_tk
 
         titulo1.set(product_list.products[indice].title)
+
         descripcion.set(product_list.products[indice].description)
-        categoria.set(product_list.products[indice].category)
-        precio.set(product_list.products[indice].price)
-        descuento.set(product_list.products[indice].discountPercentage)
-        marca.set(product_list.products[indice].brand)
-        etiquetas.set(product_list.products[indice].tags[0])
-        unidades.set(product_list.products[indice].stock)
-        valoracion.set(product_list.products[indice].rating)
+        categoria.set(f"{product_list.products[indice].category}")
+        precio.set(f"Precio: {product_list.products[indice].price}")
+        descuento.set(f"Descuento: {product_list.products[indice].discountPercentage}")
+        marca.set(f"Marca: {product_list.products[indice].brand}")
+        etiquetas.set(f"Etiquetas: {product_list.products[indice].tags[0]}")
+        unidades.set(f"Cantidad en stock:{product_list.products[indice].stock}")
+        valoracion.set(f"Valoración: {product_list.products[indice].rating}")
+
+
+def indice_derecha():
+    global indice
+    indice += 1
+    if indice < len(product_list.products):
+        carrusel()
+    else:
+        indice = -1
+
+def indice_izquierda():
+    global indice
+    indice -= 1
+    if indice < len(product_list.products):
+        carrusel()
+    else:
+        indice = 0
 
 
 def modelo_principal():
@@ -61,42 +80,61 @@ def modelo_principal():
     label1.pack(ipady="12", ipadx="20")
 
     buscador = ttk.Frame(root, style="2.TLabel", width=800, height=50)
-    buscador.pack(side="top", fill=X)
+    buscador.pack(side="bottom", fill=X,  ipady="1")
 
     contenido = ttk.Frame(root, style="3.TLabel", width=800, height=750)
     contenido.pack(side="top", expand=True, fill=BOTH)
 
-    boton_resultado = ttk.Button(contenido, textvariable=resultado)
-    boton_resultado.pack(side="bottom", fill=NONE)
+    contenido2 = ttk.Frame(contenido, style="3.TLabel", width=800, height=350)
+    contenido2.pack(side="top", expand=True, fill=BOTH)
 
-    label_imagen_producto = ttk.Label(contenido,background="#dff5f0", text="Jugar")
+    contenidoDer = ttk.Frame(contenido2, style="3.TLabel", width=400, height=350)
+    contenidoDer.pack(side="left", expand=True, fill=BOTH)
+
+    contenidoIzq = ttk.Frame(contenido2, style="3.TLabel", width=400, height=350)
+    contenidoIzq.pack(side="right", expand=True, fill=BOTH)
+
+    imagenFrame = ttk.Frame(contenido, style="3.TLabel", width=800, height=400)
+    imagenFrame.pack(side="top", expand=True, fill=BOTH)
+
+
+
+    boton_izquierda = ttk.Button(buscador, text="Anterior", command=indice_izquierda)
+    boton_izquierda.pack(fill=NONE)
+    boton_izquierda.place(x=300, y=10, anchor="nw")
+
+    boton_derecha = ttk.Button(buscador,text="Siguiente",  command=indice_derecha)
+    boton_derecha.pack(fill=NONE)
+    boton_derecha.place(x=400, y=10, anchor="nw")
+
+    label_imagen_producto = ttk.Label(imagenFrame,background="#dff5f0", text="Jugar")
     label_imagen_producto.pack(side="bottom", ipady="2", ipadx="20")
 
-    label_titulo = Label(contenido, textvariable=titulo1 , background="#dff5f0")
+    label_titulo = Label(contenidoDer, textvariable=titulo1 , background="#dff5f0")
     label_titulo.pack(ipady="12", ipadx="20")
 
-    label_descripcion = Label(contenido, textvariable=descripcion , background="#dff5f0")
+    label_descripcion = Label(contenidoDer, textvariable=descripcion , background="#dff5f0", font=10, wraplength=400)
     label_descripcion.pack(ipady="12", ipadx="20")
 
-    label_categoria = Label(contenido, textvariable=categoria , background="#dff5f0")
+    label_categoria = Label(contenidoDer, textvariable=categoria , background="#dff5f0")
     label_categoria.pack(ipady="12", ipadx="20")
 
-    label_precio = Label(contenido, textvariable=precio , background="#dff5f0")
+    label_precio = Label(contenidoIzq, textvariable=precio , background="#dff5f0")
     label_precio.pack(ipady="12", ipadx="20")
 
-    label_descuento = Label(contenido, textvariable=descuento , background="#dff5f0")
+    label_descuento = Label(contenidoIzq, textvariable=descuento , background="#dff5f0")
     label_descuento.pack(ipady="12", ipadx="20")
 
-    label_valoracion = Label(contenido, textvariable=valoracion , background="#dff5f0")
+    label_valoracion = Label(contenidoIzq, textvariable=valoracion , background="#dff5f0")
     label_valoracion.pack(ipady="12", ipadx="20")
 
-    label_unidades = Label(contenido, textvariable=unidades , background="#dff5f0")
+    label_unidades = Label(contenidoIzq, textvariable=unidades , background="#dff5f0")
     label_unidades.pack(ipady="12", ipadx="20")
 
-    label_etiquetas = Label(contenido, textvariable=etiquetas, background="#dff5f0")
+    label_etiquetas = Label(contenidoIzq, textvariable=etiquetas, background="#dff5f0")
     label_etiquetas.pack(ipady="12", ipadx="20")
 
-    label_brand = Label(contenido, textvariable=marca , background="#dff5f0")
+    label_brand = Label(contenidoIzq, textvariable=marca , background="#dff5f0")
     label_brand.pack(ipady="12", ipadx="20")
 
     carrusel()
