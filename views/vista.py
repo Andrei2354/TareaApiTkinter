@@ -64,6 +64,9 @@ def indice_izquierda():
     else:
         indice = 0
 
+def buscar_indice():
+    return""
+
 
 def modelo_principal():
     global root, indice, contenido, label_imagen_producto, titulo1, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion
@@ -76,11 +79,12 @@ def modelo_principal():
     titulo = ttk.Frame(root, style="1.TLabel",  width=800, height=100)
     titulo.pack(side="top", fill=X)
 
-    label1 = Label(titulo, text="Productos", background="#fc9403")
-    label1.pack(ipady="12", ipadx="20")
+    buscadorArriba = ttk.Frame(root, style="2.TLabel", width=800, height=50)
+    buscadorArriba.pack(side="top", fill=X, ipady="10")
 
-    buscador = ttk.Frame(root, style="2.TLabel", width=800, height=50)
-    buscador.pack(side="bottom", fill=X,  ipady="1")
+
+    buscadorAbajo = ttk.Frame(root, style="2.TLabel", width=800, height=50)
+    buscadorAbajo.pack(side="bottom", fill=X,  ipady="1")
 
     contenido = ttk.Frame(root, style="3.TLabel", width=800, height=750)
     contenido.pack(side="top", expand=True, fill=BOTH)
@@ -97,20 +101,33 @@ def modelo_principal():
     imagenFrame = ttk.Frame(contenido, style="3.TLabel", width=800, height=400)
     imagenFrame.pack(side="top", expand=True, fill=BOTH)
 
+    # Elementos dentro de los frames
+
+    label1 = Label(titulo, text="Productos", background="#fc9403", font=("Times New Roman", 20, "bold"))
+    label1.pack(side="top")
+
+    label1 = Label(buscadorArriba, text="Buscar producto:", background="#8cd0d1")
+    label1.pack(side="left", padx="10")
+
+    entry_buscar = ttk.Entry(buscadorArriba, width=15)
+    entry_buscar.pack(side="left", padx="10")
+
+    boton_buscar = ttk.Button(buscadorArriba,text="Buscar",  command="buscar_indice")
+    boton_buscar.pack(side="left", padx="10")
 
 
-    boton_izquierda = ttk.Button(buscador, text="Anterior", command=indice_izquierda)
+    boton_izquierda = ttk.Button(buscadorAbajo, text="Anterior", command=indice_izquierda)
     boton_izquierda.pack(fill=NONE)
     boton_izquierda.place(x=300, y=10, anchor="nw")
 
-    boton_derecha = ttk.Button(buscador,text="Siguiente",  command=indice_derecha)
+    boton_derecha = ttk.Button(buscadorAbajo,text="Siguiente",  command=indice_derecha)
     boton_derecha.pack(fill=NONE)
     boton_derecha.place(x=400, y=10, anchor="nw")
 
     label_imagen_producto = ttk.Label(imagenFrame,background="#dff5f0", text="Jugar")
     label_imagen_producto.pack(side="bottom", ipady="2", ipadx="20")
 
-    label_titulo = Label(contenidoDer, textvariable=titulo1 , background="#dff5f0")
+    label_titulo = Label(contenidoDer, textvariable=titulo1 , background="#dff5f0", font=("Times New Roman", 15, "bold"))
     label_titulo.pack(ipady="12", ipadx="20")
 
     label_descripcion = Label(contenidoDer, textvariable=descripcion , background="#dff5f0", font=10, wraplength=400)
