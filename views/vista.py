@@ -5,9 +5,12 @@ from shutil import which
 from tkinter import ttk
 from tkinter import *
 import random
+from typing import List
+
 from PIL import ImageTk, Image
 import requests
 from models.Main import product_list
+from models.ProductApi import Product
 
 root = tk.Tk()  # Ventana principal
 canvas = tk.Canvas(root)
@@ -65,11 +68,39 @@ def indice_izquierda():
         indice = 0
 
 def buscar_indice():
-    return""
+    global entry_buscar, indice
+    texto = entry_buscar.get().lower()
+    for i in range(len(product_list.products)):
+        if texto in product_list.products[i].title.lower():
+            indice = i
+            carrusel()
+            break
+
+def buscar_listado():
+    global product_list
+    texto = entry_buscar.get().lower()
+    productos_busqueda = list(filter(lambda producto: texto in producto.title.lower(), product_list.products))
+    productos_busqueda.sort(key=lambda producto: producto.title)
+    mostrar_listado(productos_busqueda)
+
+def mostrar_listado(productos: List[Product]):
+    global entry_buscar, indice
+    ventana_secundaria = tk.Toplevel()
+    ventana_secundaria.title("Ventana secundaria")
+    ventana_secundaria.config(width=300, height=200, background="#dff5f0")
+
+    ttk.Label(ventana_secundaria, text="Productos", font=("Arial", 18, "bold"), background="#dff5f0").pack()
+    for producto in productos:
+        ttk.Label(ventana_secundaria, text=producto.title, background="#dff5f0", justify="left").pack()
+
+    boton_buscar = ttk.Button(ventana_secundaria, text="Generar PDF", command="")
+    boton_buscar.pack(padx=(0, 0))
+    boton_cerrar = ttk.Button(ventana_secundaria,text="Cerrar ventana",command=ventana_secundaria.destroy)
+    boton_cerrar.pack(padx=(0, 0))
 
 
 def modelo_principal():
-    global root, indice, contenido, label_imagen_producto, titulo1, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion
+    global root, indice, contenido, label_imagen_producto, titulo1, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion, entry_buscar
 
     style = ttk.Style()
     style.configure("1.TLabel", background="#fc9403")
@@ -109,11 +140,15 @@ def modelo_principal():
     label1 = Label(buscadorArriba, text="Buscar producto:", background="#8cd0d1")
     label1.pack(side="left", padx="10")
 
+
     entry_buscar = ttk.Entry(buscadorArriba, width=15)
     entry_buscar.pack(side="left", padx="10")
 
-    boton_buscar = ttk.Button(buscadorArriba,text="Buscar",  command="buscar_indice")
+    boton_buscar = ttk.Button(buscadorArriba,text="Buscar",  command=buscar_indice)
     boton_buscar.pack(side="left", padx="10")
+
+    boton_listado = ttk.Button(buscadorArriba,text="Listado",  command=buscar_listado)
+    boton_listado.pack(side="left", padx="10")
 
 
     boton_izquierda = ttk.Button(buscadorAbajo, text="Anterior", command=indice_izquierda)
