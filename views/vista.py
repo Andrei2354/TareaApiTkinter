@@ -6,11 +6,13 @@ from tkinter import ttk
 from tkinter import *
 import random
 from typing import List
+from tkinter import messagebox as alert
 
 from PIL import ImageTk, Image
 import requests
 from models.Main import product_list
 from models.ProductApi import Product
+from models.empresa import Empresa
 
 root = tk.Tk()  # Ventana principal
 canvas = tk.Canvas(root)
@@ -97,6 +99,17 @@ def mostrar_listado(productos: List[Product]):
     boton_buscar.pack(padx=(0, 0))
     boton_cerrar = ttk.Button(ventana_secundaria,text="Cerrar ventana",command=ventana_secundaria.destroy)
     boton_cerrar.pack(padx=(0, 0))
+
+def generarpdf(productos: List[Product]):
+    empresa: Empresa = Empresa (
+        nombre="Alvarikola Soft S.L",
+        titular= "Alvarotech Industries López",
+        cif="123456789",
+        direccion="Calel",
+        email="hola@alvarikola.com",
+    )
+    # Genero PDF (nombre=bsuqueda_resultado_202410241344SS.pdf)
+    alert.showinfo("PDF generado", "Se ha generado el PDF correctamente")
 
 
 def modelo_principal():
