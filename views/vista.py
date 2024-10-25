@@ -1,18 +1,13 @@
 import tkinter as tk
-from functools import wraps
-from itertools import product
-from shutil import which
 from tkinter import ttk
 from tkinter import *
-import random
 from typing import List
 from tkinter import messagebox as alert
-
 from PIL import ImageTk, Image
 import requests
-from models.Main import product_list
 from models.ProductApi import Product
 from models.empresa import Empresa
+from weasyprint import HTML
 
 root = tk.Tk()  # Ventana principal
 canvas = tk.Canvas(root)
@@ -102,15 +97,48 @@ def mostrar_listado(productos: List[Product]):
 
 def generarpdf(productos: List[Product]):
     empresa: Empresa = Empresa (
-        nombre="Alvarikola Soft S.L",
-        titular= "Alvarotech Industries López",
-        cif="123456789",
-        direccion="Calel",
-        email="hola@alvarikola.com",
+        nombre="Empresa Andrei S.L",
+        titular= " Industries López",
+        cif="234214",
+        direccion="IES haria",
+        email="andreiaimar@gmail.com",
     )
     # Genero PDF (nombre=bsuqueda_resultado_202410241344SS.pdf)
     alert.showinfo("PDF generado", "Se ha generado el PDF correctamente")
-
+    documento_pdf = """
+        <body>
+        <header>
+            <h1>Título del Documento</h1>
+            <p>Nombre: Andrei Pérez</p>
+            <p>Titular: Empresa XYZ</p>
+            <p>CIF: A12345678</p>
+            <p>Dirección: Calle Ejemplo, 123 - Ciudad</p>
+            <p>Email: ejemplo@empresa.com</p>
+        </header>
+        <main>
+        """
+    for producto in productos:
+        indice += 1
+        documento_pdf += """
+            <section class="">
+                <h2>Título del Producto</h2>
+                <p><strong>Descripción:</strong> </p>
+                <p><strong>Categoría:</strong></p>
+                <p><strong>Precio:</strong></p>
+                <p><strong>Descuento:</strong></p>
+                <p><strong>Calificación:</strong></p>
+                <p><strong>Stock:</strong></p>
+                <p><strong>Etiquetas:</strong></p>
+            </section>
+            <section class="imagen-info">
+                <div class="images"><img src="empleado.jpeg" alt="Imagen del producto"></div>
+            </section>
+        """
+    documento_pdf = """
+            </main>  
+        </body>  
+        </html>
+        """
 
 def modelo_principal():
     global root, indice, contenido, label_imagen_producto, titulo1, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion, entry_buscar
