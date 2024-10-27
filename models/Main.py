@@ -1,5 +1,4 @@
-import json
-from itertools import product
+
 
 import requests
 from dataclass_wizard import fromdict

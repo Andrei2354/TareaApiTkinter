@@ -1,4 +1,4 @@
-from typing import List
+
 
 from models.ProductApi import Product
 from dataclasses import dataclass

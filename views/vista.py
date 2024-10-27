@@ -4,10 +4,12 @@ from tkinter import *
 from typing import List
 from tkinter import messagebox as alert
 from PIL import ImageTk, Image
-import requests
+from weasyprint import HTML
+
 from models.ProductApi import Product
 from models.empresa import Empresa
-from weasyprint import HTML
+
+from models.Main import *
 
 root = tk.Tk()  # Ventana principal
 canvas = tk.Canvas(root)
@@ -84,13 +86,13 @@ def mostrar_listado(productos: List[Product]):
     global entry_buscar, indice
     ventana_secundaria = tk.Toplevel()
     ventana_secundaria.title("Ventana secundaria")
-    ventana_secundaria.config(width=300, height=200, background="#dff5f0")
+    ventana_secundaria.config(width=300, height=300, background="#dff5f0")
 
     ttk.Label(ventana_secundaria, text="Productos", font=("Arial", 18, "bold"), background="#dff5f0").pack()
     for producto in productos:
         ttk.Label(ventana_secundaria, text=producto.title, background="#dff5f0", justify="left").pack()
 
-    boton_buscar = ttk.Button(ventana_secundaria, text="Generar PDF", command="")
+    boton_buscar = ttk.Button(ventana_secundaria, text="Generar PDF",  command=lambda:generarpdf(productos))
     boton_buscar.pack(padx=(0, 0))
     boton_cerrar = ttk.Button(ventana_secundaria,text="Cerrar ventana",command=ventana_secundaria.destroy)
     boton_cerrar.pack(padx=(0, 0))
@@ -103,42 +105,92 @@ def generarpdf(productos: List[Product]):
         direccion="IES haria",
         email="andreiaimar@gmail.com",
     )
-    # Genero PDF (nombre=bsuqueda_resultado_202410241344SS.pdf)
-    alert.showinfo("PDF generado", "Se ha generado el PDF correctamente")
     documento_pdf = """
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    color: #333;  
+                }   
+                header {
+                    border-bottom: 2px solid #000;
+                    padding-bottom: 10px;
+                    margin-bottom: 20px;  
+                }    
+                h1 {
+                    font-size: 24px;
+                    margin: 0;  
+                }     
+                h2 {
+                    font-size: 20px;
+                    margin-top: 20px;  
+                }     
+                p {
+                    margin: 5px 0;  
+                }   
+                .images {
+                    display: flex;
+                    gap: 10px;
+                    margin-top: 15px;  
+                }  
+                .images img {
+                    max-width: auto;
+                    height: auto;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;  
+                }  
+                main{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    background-color: #f9f9f9;
+                    padding: 15px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;  
+                }
+            </style>
+        </head>
         <body>
-        <header>
-            <h1>Título del Documento</h1>
-            <p>Nombre: Andrei Pérez</p>
-            <p>Titular: Empresa XYZ</p>
-            <p>CIF: A12345678</p>
-            <p>Dirección: Calle Ejemplo, 123 - Ciudad</p>
-            <p>Email: ejemplo@empresa.com</p>
-        </header>
-        <main>
-        """
+            <header>
+                <h1>Título del Documento</h1>
+                <p>Nombre: Andrei Pérez</p>
+                <p>Titular: Empresa XYZ</p>
+                <p>CIF: A12345678</p>
+                <p>Dirección: Calle Ejemplo, 123 - Ciudad</p>
+                <p>Email: ejemplo@empresa.com</p>
+            </header>
+            <main>
+    """
+    indice = 0
     for producto in productos:
         indice += 1
         documento_pdf += """
             <section class="">
-                <h2>Título del Producto</h2>
-                <p><strong>Descripción:</strong> </p>
-                <p><strong>Categoría:</strong></p>
-                <p><strong>Precio:</strong></p>
-                <p><strong>Descuento:</strong></p>
-                <p><strong>Calificación:</strong></p>
-                <p><strong>Stock:</strong></p>
-                <p><strong>Etiquetas:</strong></p>
+                <h2></h2>
+                <p><strong>Descripción:""" + str(producto.description) + """</strong></p>
+                <p><strong>Categoría:""" + producto.category + """</strong></p>
+                <p><strong>Precio:""" + str(producto.price) + """</strong></p>
+                <p><strong>Descuento:""" + str(producto.discountPercentage) + """</strong></p>
+                <p><strong>Calificación:""" + str(producto.rating) + """</strong></p>
+                <p><strong>Stock:""" + str(producto.stock) + """</strong></p>
+                <p><strong>Etiquetas:""" + producto.tags[0] + """</strong></p>
             </section>
-            <section class="imagen-info">
-                <div class="images"><img src="empleado.jpeg" alt="Imagen del producto"></div>
+            <section class='imagen-info'>
+                <div class='images'><img src='' alt='Imagen del producto'></div>
             </section>
         """
     documento_pdf = """
             </main>  
         </body>  
-        </html>
-        """
+    </html>
+    """
+    htmldoc = HTML(string=documento_pdf)
+    htmldoc.write_pdf(target="busqueda_resultado.pdf")
+    alert.showinfo("PDF generado", "Se ha generado el PDF correctamente")
 
 def modelo_principal():
     global root, indice, contenido, label_imagen_producto, titulo1, descripcion, categoria, precio, descuento, marca, etiquetas, unidades, valoracion, entry_buscar
